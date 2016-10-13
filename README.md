@@ -1,5 +1,7 @@
 # Native docker-based local environment for WordPress
 
+(this fork uses https://github.com/garethcole/wordpress-php in place of the original php image so that xdebugging on sublime is supported)
+
 Use this Docker compose file to spin up local environment for WordPress with a *native Docker app* on Linux, Mac OS X and Windows. 
 
 Docker4WordPress is designed to be used for local development, if you're looking for a dev/staging/production solution check out <a href="https://wodby.com" target="_blank">Wodby</a>. Use Wodby to deploy container-based infrastructure consistent with Docker4WordPress to any server.
