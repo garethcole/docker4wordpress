@@ -1,6 +1,8 @@
 # Native docker-based local environment for WordPress
 
-(this fork uses https://github.com/garethcole/wordpress-php in place of the original php image so that xdebugging on sublime is supported)
+####GC:
+this fork uses https://github.com/garethcole/wordpress-php in place of the original php image so that xdebugging on sublime is supported)
+For xdebug setup and notes for Sublime see here: https://github.com/garethcole/wordpress-php
 
 Use this Docker compose file to spin up local environment for WordPress with a *native Docker app* on Linux, Mac OS X and Windows. 
 
