@@ -14,7 +14,7 @@ services:
 #      - ./docker-runtime/mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
 
   php:
-    image: wodby/wordpress-php
+    image: garethcole/wordpress-php
     environment:
       PHP_SITE_NAME: dev
       PHP_HOST_NAME: localhost:8000
