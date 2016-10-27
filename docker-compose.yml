@@ -4,7 +4,6 @@ services:
   mariadb:
     image: wodby/wordpress-mariadb
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 1
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
