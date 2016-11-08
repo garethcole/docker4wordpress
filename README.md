@@ -4,6 +4,75 @@
 this fork uses https://github.com/garethcole/wordpress-php in place of the original php image so that xdebugging on sublime is supported)
 For xdebug setup and notes for Sublime see here: https://github.com/garethcole/wordpress-php
 
+### Setup
+```
+mkdir my-project
+cd my-project/
+git clone https://github.com/garethcole/docker4wordpress.git docker4wordpress2
+mv docker4wordpress2/docker-compose.yml .
+rm -rf docker4wordpress2
+curl https://wordpress.org/latest.tar.gz | tar xvz
+```
+Edit docker-compose.yml
+```
+MYSQL_DATABASE: wordpress
+MYSQL_USER: wordpress
+MYSQL_PASSWORD: wordpress
+MYSQL_ROOT_PASSWORD: wordpress
+
+PHP_HOST_NAME: localhost:8000 # or [docker-machine ip]:8000
+PHP_DOCROOT: wordpress
+
+NGINX_SERVER_NAME: localhost # Or [docker-machine ip]
+NGINX_DOCROOT: wordpress
+```
+
+#### Start the containers
+```
+docker-compose up -d
+```
+
+### Go through the WP install
+http://localhost:8000 (or http://[docker-machine ip]:8000
+Warning: if using boot2docker there are permissions issues with Wordpress writing to wp-config.php. Either create manually or alter the permissions temporarily to allow the system to write (chmod -R 777 wordpress then back again)
+
+### Example test setup
+To run integration style testing using the WP testing framework.
+Create an example plugin called MyFirstPlugin
+```
+<?php
+if( ! array_key_exists( ‘my-first-plugin', $GLOBALS ) ) { 
+    class Hello_Reader {
+        function __construct() {}
+    }
+
+    // Store a reference to the plugin in GLOBALS so that our unit tests can access it
+    $GLOBALS['my-first-plugin'] = new MyFirstPlugin();
+}
+```
+#### Scaffold the test setup on the plugin
+```
+docker exec -it testsite_php_1  wp --allow-root --path='/var/www/html/wordpress' scaffold plugin-tests MyFirstPlugin
+```
+#### Install wp test framework
+```
+docker exec -it testsite_php_1 bash /var/www/html/wordpress/wp-content/plugins/MyFirstPlugin/bin/install-wp-tests.sh wordpress_test root 'wordpress' mariadb latest
+```
+#### Create the phpunit config
+```
+cp wordpress/wp-content/plugins/MyFirstPlugin/phpunit.xml.default wordpress/wp-content/plugins/MyFirstPlugin/phpunit.xml
+```
+#### Run unit tests
+docker exec -it testsite_php_1 phpunit --configuration="/var/www/html/wordpress/wp-content/plugins/MyFirstPlugin/phpunit.xml"
+
+
+
+
+
+
+
+## Original documentation from Wodby
+
 Use this Docker compose file to spin up local environment for WordPress with a *native Docker app* on Linux, Mac OS X and Windows. 
 
 Docker4WordPress is designed to be used for local development, if you're looking for a dev/staging/production solution check out <a href="https://wodby.com" target="_blank">Wodby</a>. Use Wodby to deploy container-based infrastructure consistent with Docker4WordPress to any server.
