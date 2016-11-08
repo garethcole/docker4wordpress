@@ -33,6 +33,7 @@ http://localhost:8000 (or http://[docker-machine ip]:8000
 - username: wordpress
 - password: wordpress
 - database host: mariadb
+
 Warning: if using boot2docker there are permissions issues with Wordpress writing to wp-config.php. Either create manually or alter the permissions temporarily to allow the system to write (chmod -R 777 wordpress then back again)
 
 ### Example test setup
