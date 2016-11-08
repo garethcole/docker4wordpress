@@ -2,7 +2,10 @@ version: "2"
 
 services:
   mariadb:
-    image: wodby/wordpress-mariadb
+    # This version doesn't work on boot2docker / early macs
+    #image: wodby/wordpress-mariadb
+    # Includes hack to fix permissions issues on boot2docker / early macs
+    image: garethcole/wordpress-mariadb
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
