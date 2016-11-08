@@ -8,18 +8,13 @@ For xdebug setup and notes for Sublime see here: https://github.com/garethcole/w
 ```
 mkdir my-project
 cd my-project/
-git clone https://github.com/garethcole/docker4wordpress.git docker4wordpress2
-mv docker4wordpress2/docker-compose.yml .
-rm -rf docker4wordpress2
+git clone https://github.com/garethcole/docker4wordpress.git docker4wordpress
+mv docker4wordpress/docker-compose.yml .
+rm -rf docker4wordpress
 curl https://wordpress.org/latest.tar.gz | tar xvz
 ```
 Edit docker-compose.yml
 ```
-MYSQL_DATABASE: wordpress
-MYSQL_USER: wordpress
-MYSQL_PASSWORD: wordpress
-MYSQL_ROOT_PASSWORD: wordpress
-
 PHP_HOST_NAME: localhost:8000 # or [docker-machine ip]:8000
 PHP_DOCROOT: wordpress
 
@@ -34,14 +29,18 @@ docker-compose up -d
 
 ### Go through the WP install
 http://localhost:8000 (or http://[docker-machine ip]:8000
+- database name: wordpress
+- username: wordpress
+- password: wordpress
+- database host: mariadb
 Warning: if using boot2docker there are permissions issues with Wordpress writing to wp-config.php. Either create manually or alter the permissions temporarily to allow the system to write (chmod -R 777 wordpress then back again)
 
 ### Example test setup
 To run integration style testing using the WP testing framework.
-Create an example plugin called MyFirstPlugin
+Create an example plugin (in wordpress/wp-content/plugins/myfirstplugin/myfirstplugin.php)
 ```
 <?php
-if( ! array_key_exists( ‘my-first-plugin', $GLOBALS ) ) { 
+if( ! array_key_exists( 'my-first-plugin', $GLOBALS ) ) { 
     class Hello_Reader {
         function __construct() {}
     }
@@ -52,18 +51,20 @@ if( ! array_key_exists( ‘my-first-plugin', $GLOBALS ) ) {
 ```
 #### Scaffold the test setup on the plugin
 ```
-docker exec -it testsite_php_1  wp --allow-root --path='/var/www/html/wordpress' scaffold plugin-tests MyFirstPlugin
+docker exec -it myproject_php_1  wp --allow-root --path='/var/www/html/wordpress' scaffold plugin-tests myfirstplugin
 ```
 #### Install wp test framework
 ```
-docker exec -it testsite_php_1 bash /var/www/html/wordpress/wp-content/plugins/MyFirstPlugin/bin/install-wp-tests.sh wordpress_test root 'wordpress' mariadb latest
+docker exec -it myproject_php_1 bash /var/www/html/wordpress/wp-content/plugins/myfirstplugin/bin/install-wp-tests.sh wordpress_test root 'wordpress' mariadb latest
 ```
 #### Create the phpunit config
 ```
-cp wordpress/wp-content/plugins/MyFirstPlugin/phpunit.xml.default wordpress/wp-content/plugins/MyFirstPlugin/phpunit.xml
+cp wordpress/wp-content/plugins/myfirstplugin/phpunit.xml.dist wordpress/wp-content/plugins/myfirstplugin/phpunit.xml
 ```
 #### Run unit tests
-docker exec -it testsite_php_1 phpunit --configuration="/var/www/html/wordpress/wp-content/plugins/MyFirstPlugin/phpunit.xml"
+```
+docker exec -it myproject_php_1 phpunit --configuration="/var/www/html/wordpress/wp-content/plugins/myfirstplugin/phpunit.xml"
+```
 
 
 
