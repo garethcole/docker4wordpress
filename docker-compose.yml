@@ -5,7 +5,7 @@ services:
     # This version doesn't work on boot2docker / early macs
     #image: wodby/wordpress-mariadb
     # Includes hack to fix permissions issues on boot2docker / early macs
-    image: garethcole/wordpress-mariadb
+    image: garethcole/mariadb
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
